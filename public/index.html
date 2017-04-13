@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>CHAT-GAME</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <h1>YO MANNNNN envoie donc ton message</h1>
+            <!--
+            <script src="/socket.io/socket.io.js"></script>
+            
+            <script>
+                var socket = io();
+
+                socket.on('connect', () => {
+                    console.log('connecté');
+                });
+                socket.on('chatpong', () => {
+                    console.log('le server à dit : chatpong');
+                });
+
+                console.log('le client à dit : chatping');
+                socket.emit('chatping');
+
+
+            </script>
+            -->
+
+            <!-- formulaire d'envoi du message -->
+            <form id="msgform">
+                <input type="text" name="message" placeholder="message à envoyer." />
+            </form>
+            <ul id="messages"></ul>
+            <div id='users'>
+                <h2>Connectés</h2>
+                <ul></ul>
+            </div>
+
+
+
+
+
+            <!-- traitement du formulaire pour envoyer le message -->
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                var socket = io(); // initialisation de la liaison client/server
+                socket.on('connect', function () { // quand recoit message de connection 
+                    console.log('connecté'); // -> ok
+                });
+
+                var msgform = document.getElementById("msgform"); // on recupère l'element du formulaire
+                msgform.addEventListener('submit', function (e) { // creation de l'evenement d'envoi
+                    e.preventDefault();
+                    socket.emit('msg', this.message.value); // emission de la valeur du message au serveur
+                    this.message.value = ''; // vide le champ texte
+                });
+
+
+                socket.on('msg', function (txt) { // à reception du message venant du serveur
+                    var messages = document.getElementById('messages'); // récupère l'id Messages (liste)
+                    var li = document.createElement('li'); // creer un element pour la liste
+                    li.innerText = txt; // inclu le texte dans cet element
+                    messages.appendChild(li); // imbrique l'element dans la liste
+                });
+
+                // Réception de la nouvelle liste des connectés
+                // de type [{id, nickname}, ...]
+                var usersUl = document.querySelector('#users ul');
+                socket.on('users', function (users) {
+                    usersUl.innerHTML = users.map(u => '<li>' + u.nickname + '</li>').join('');
+                });
+
+
+
+            </script>
+
+
+        </div>
+    </body>
+</html>
